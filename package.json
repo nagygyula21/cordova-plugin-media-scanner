@@ -1,0 +1,26 @@
+{
+  "name": "MediaScanner",
+  "version": "1.0.0",
+  "description": "MediaScanner",
+  "cordova": {
+    "id": "cordova-plugin-media-scanner",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nagygyula21/cordova-plugin-media-scanner.git"
+  },
+  "keywords": [
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Lyon21",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nagygyula21/cordova-plugin-media-scanner/issues"
+  },
+  "homepage": "https://github.com/nagygyula21/cordova-plugin-media-scanner#readme"
+}
