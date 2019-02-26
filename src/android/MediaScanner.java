@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.util.Log;
 
 public class MediaScanner extends CordovaPlugin {
+	public static final int WRITE_PERM_REQUEST_CODE0 = 0;
     public static final int WRITE_PERM_REQUEST_CODE = 1;
     private final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final String TAG = "MediaScanner";
@@ -33,10 +34,8 @@ public class MediaScanner extends CordovaPlugin {
         this._callback = callbackContext;
         if (action.equals("checkPermission")) {
 			if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
-				PermissionHelper.requestPermission(this, 0, WRITE_EXTERNAL_STORAGE);
+				PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
 			}
-            callbackContext.success();
-            return true;
         } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
             String mediaPath = this.checkFilePath(args.optString(0));
             this.sourceFilePath = mediaPath;
@@ -113,6 +112,9 @@ public class MediaScanner extends CordovaPlugin {
         }
 
         switch (requestCode) {
+		case WRITE_PERM_REQUEST_CODE0:
+			this._callback.success("Permission granted");
+			break;
         case WRITE_PERM_REQUEST_CODE:
             this.mediaScan(this.sourceFilePath, this._callback);
             break;
