@@ -32,6 +32,9 @@ public class MediaScanner extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this._callback = callbackContext;
         if (action.equals("checkPermission")) {
+			if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
+				PermissionHelper.requestPermission(this, 0, WRITE_EXTERNAL_STORAGE);
+			}
             callbackContext.success();
             return true;
         } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
