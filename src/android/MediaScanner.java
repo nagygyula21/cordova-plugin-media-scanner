@@ -20,6 +20,7 @@ import java.nio.channels.FileChannel;
 
 import android.os.Environment;
 import android.util.Log;
+import android.provider.Settings;
 
 public class MediaScanner extends CordovaPlugin {
 	public static final int WRITE_PERM_REQUEST_CODE0 = 0;
