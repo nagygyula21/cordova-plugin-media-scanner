@@ -33,9 +33,22 @@ public class MediaScanner extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this._callback = callbackContext;
         if (action.equals("checkPermission")) {
-			if (!PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
-				PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
-			}
+	   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+
+              try {
+                Uri uri = Uri.parse("package:" + this.cordova.getActivity().getPackageName());
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
+                cordova.getActivity().startActivity(intent);
+              } catch (Exception ex){}
+
+              return false;
+            }
+          } else {
+            if (!PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
+              PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
+            }
+          }
         } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
             String mediaPath = this.checkFilePath(args.optString(0));
             this.sourceFilePath = mediaPath;
