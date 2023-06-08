@@ -46,7 +46,7 @@ public class MediaScanner extends CordovaPlugin {
             cordova.getActivity().startActivity(intent);
           } catch (Exception ex) {
           }
-          callbackContext.error("Permission waiting!");
+          this._callback.error("Permission waiting!");
 
         } else {
           this._callback.success("Permission granted");
@@ -54,7 +54,8 @@ public class MediaScanner extends CordovaPlugin {
       } else {
         if (!PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
           PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
-          callbackContext.error("Permission waiting!");
+        } else {
+          this._callback.success("Permission granted");
         }
       }
     } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
@@ -71,7 +72,7 @@ public class MediaScanner extends CordovaPlugin {
               cordova.getActivity().startActivity(intent);
             } catch (Exception ex) {
             }
-            callbackContext.error("Permission waiting!");
+            this._callback.error("Permission waiting!");
 
           } else {
             this.mediaScan(mediaPath, callbackContext);
@@ -80,14 +81,14 @@ public class MediaScanner extends CordovaPlugin {
         } else {
           if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
             this.mediaScan(mediaPath, callbackContext);
+            this._callback.success("Permission granted");
           } else {
             PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE, WRITE_EXTERNAL_STORAGE);
-            callbackContext.error("Permission waiting!");
           }
         }
 
       } else {
-        callbackContext.error("Media file path error!");
+        this._callback.error("Media file path error!");
         return false;
       }
     }
@@ -103,12 +104,11 @@ public class MediaScanner extends CordovaPlugin {
     }
     File in = new File(mediaPath);
     File out = new File(folder + "/" + mediaPath.substring(mediaPath.lastIndexOf("/") + 1));
-
     if (in != null && out != null) {
       try {
         this.copy(in, out);
       } catch (IOException ex) {
-        callback.error("File copy error!");
+        callback.error("File copy error!" + ex.getMessage().toString());
         return;
       }
 
