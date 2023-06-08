@@ -38,46 +38,21 @@ public class MediaScanner extends CordovaPlugin {
     this._callback = callbackContext;
     if (action.equals("checkPermission")) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        if (!Environment.isExternalStorageManager()) {
-
-          try {
-            Uri uri = Uri.parse("package:" + this.cordova.getActivity().getPackageName());
-            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
-            cordova.getActivity().startActivity(intent);
-          } catch (Exception ex) {
-          }
-          this._callback.error("Permission waiting!");
-
-        } else {
-          this._callback.success("Permission granted");
-        }
+        this._callback.success("Permission granted");
       } else {
-        if (!PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
-          PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
-        } else {
+        if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
           this._callback.success("Permission granted");
+        } else {
+          PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE, WRITE_EXTERNAL_STORAGE);
         }
       }
     } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
       String mediaPath = this.checkFilePath(args.optString(0));
       this.sourceFilePath = mediaPath;
       if (!mediaPath.equals("")) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-          if (!Environment.isExternalStorageManager()) {
-
-            try {
-              Uri uri = Uri.parse("package:" + this.cordova.getActivity().getPackageName());
-              Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
-              cordova.getActivity().startActivity(intent);
-            } catch (Exception ex) {
-            }
-            this._callback.error("Permission waiting!");
-
-          } else {
-            this.mediaScan(mediaPath, callbackContext);
-            this._callback.success("Permission granted");
-          }
+          this.mediaScan(mediaPath, callbackContext);
+          this._callback.success("Permission granted");
         } else {
           if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
             this.mediaScan(mediaPath, callbackContext);
@@ -86,7 +61,6 @@ public class MediaScanner extends CordovaPlugin {
             PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE, WRITE_EXTERNAL_STORAGE);
           }
         }
-
       } else {
         this._callback.error("Media file path error!");
         return false;
