@@ -43,7 +43,7 @@ public class MediaScanner extends CordovaPlugin {
         if (PermissionHelper.hasPermission(this, "WRITE_EXTERNAL_STORAGE")) {
           this._callback.success("Permission granted");
         } else {
-          PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE, WRITE_EXTERNAL_STORAGE);
+          PermissionHelper.requestPermission(this, WRITE_PERM_REQUEST_CODE0, WRITE_EXTERNAL_STORAGE);
         }
       }
     } else if (action.equals("mediaImageScan") || action.equals("mediaVideoScan")) {
